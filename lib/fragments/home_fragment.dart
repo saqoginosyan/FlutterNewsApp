@@ -40,12 +40,12 @@ class FirstFragmentState extends State<FirstFragment> {
       body: new ListView.builder(
         itemCount: data == null ? 0 : data.length,
         itemBuilder: (BuildContext context, int index) {
-          if (null != data[index]['urlToImage']) {
+          //if (null != data[index]['urlToImage']) {
             return Card(
               semanticContainer: true,
               clipBehavior: Clip.antiAliasWithSaveLayer,
               child: Image.network(
-                data[index]['urlToImage'],
+                null != data[index]['urlToImage'] ? data[index]['urlToImage'] : 'https://imgplaceholder.com/420x320/d5f9fa/757575/glyphicon-book?text=_none_',
                 fit: BoxFit.fill,
               ),
               shape: RoundedRectangleBorder(
@@ -54,7 +54,21 @@ class FirstFragmentState extends State<FirstFragment> {
               elevation: 5,
               margin: EdgeInsets.all(10),
             );
-          }
+         // } else {
+//            return Card(
+//              semanticContainer: true,
+//              clipBehavior: Clip.antiAliasWithSaveLayer,
+//              child: Image.network(
+//                'https://picsum.photos/420/320?image=0',
+//                fit: BoxFit.fill,
+//              ),
+//              shape: RoundedRectangleBorder(
+//                borderRadius: BorderRadius.circular(10.0),
+//              ),
+//              elevation: 5,
+//              margin: EdgeInsets.all(10),
+//            );
+         // }
         },
       ),
     );
