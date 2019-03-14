@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:news_app_flutter/home_page.dart';
+import 'package:news_app_flutter/pages/home_page.dart';
 
 class LoginPage extends StatefulWidget {
   static String tag = 'login-page';
@@ -92,9 +92,13 @@ class _LoginPageState extends State<LoginPage> {
 class AfterLogin extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return new MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: HomePage(),
+      title: 'NavigationDrawer Demo',
+      theme: new ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: new HomePage(),
     );
   }
 }
