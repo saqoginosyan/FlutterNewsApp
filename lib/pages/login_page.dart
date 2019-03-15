@@ -94,7 +94,6 @@ class AfterLogin extends StatelessWidget {
   Widget build(BuildContext context) {
     return new MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'NavigationDrawer Demo',
       theme: new ThemeData(
         primarySwatch: Colors.blue,
       ),

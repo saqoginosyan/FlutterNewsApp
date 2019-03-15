@@ -19,7 +19,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return new SplashScreen(
-        seconds: 4,
+        seconds: 1,
         navigateAfterSeconds: new AfterSplash(),
         title: new Text('Flutter News',
           style: new TextStyle(

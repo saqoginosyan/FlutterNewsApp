@@ -7,5 +7,4 @@ class SecondFragment extends StatelessWidget {
       child: new Text("Hello Fragment 2"),
     );
   }
-
 }

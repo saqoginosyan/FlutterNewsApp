@@ -1,4 +1,4 @@
-import 'package:news_app_flutter/fragments/home_fragment.dart';
+import 'package:news_app_flutter/fragments/categories_fragment.dart';
 import 'package:news_app_flutter/fragments/second_fragment.dart';
 import 'package:news_app_flutter/fragments/third_fragment.dart';
 import 'package:news_app_flutter/fetch_data/main_fetch_data.dart';
@@ -13,8 +13,12 @@ class DrawerItem {
 class HomePage extends StatefulWidget {
   var drawerItems = [
     new DrawerItem("Home", Icons.home),
+    new DrawerItem("Apple", Icons.phone_iphone),
+    new DrawerItem("Samsung", Icons.phone_android),
+    new DrawerItem("Food", Icons.fastfood),
+    new DrawerItem("Categories", Icons.category),
     new DrawerItem("Fragment 2", Icons.rss_feed),
-    new DrawerItem("Fragment 3", Icons.info)
+    new DrawerItem("Info", Icons.info)
   ];
 
   @override
@@ -29,12 +33,16 @@ class HomePageState extends State<HomePage> {
   _getDrawerItemWidget(int pos) {
     switch (pos) {
       case 0:
-        return new MainFetchData();
       case 1:
-        return new SecondFragment();
       case 2:
-        return new ThirdFragment();
-
+      case 3:
+        return new MainFetchData();
+      case 4:
+        return new Categories();
+      case 5:
+        return new SecondFragment();
+      case 6:
+        return new InfoFragment();
       default:
         return new Text("Error");
     }
