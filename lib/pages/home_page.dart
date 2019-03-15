@@ -1,6 +1,7 @@
 import 'package:news_app_flutter/fragments/home_fragment.dart';
 import 'package:news_app_flutter/fragments/second_fragment.dart';
 import 'package:news_app_flutter/fragments/third_fragment.dart';
+import 'package:news_app_flutter/fetch_data/main_fetch_data.dart';
 import 'package:flutter/material.dart';
 
 class DrawerItem {
@@ -28,7 +29,7 @@ class HomePageState extends State<HomePage> {
   _getDrawerItemWidget(int pos) {
     switch (pos) {
       case 0:
-        return new FirstFragment();
+        return new MainFetchData();
       case 1:
         return new SecondFragment();
       case 2:
@@ -69,7 +70,7 @@ class HomePageState extends State<HomePage> {
         child: new Column(
           children: <Widget>[
             new UserAccountsDrawerHeader(
-                accountName: new Text("Lyovo Lyovo"), accountEmail: null),
+                accountName: new Text("Flutter News"), accountEmail: null, currentAccountPicture: Image.asset('assets/newspaper.png')),
             new Column(children: drawerOptions)
           ],
         ),

@@ -54,21 +54,6 @@ class FirstFragmentState extends State<FirstFragment> {
               elevation: 5,
               margin: EdgeInsets.all(10),
             );
-         // } else {
-//            return Card(
-//              semanticContainer: true,
-//              clipBehavior: Clip.antiAliasWithSaveLayer,
-//              child: Image.network(
-//                'https://picsum.photos/420/320?image=0',
-//                fit: BoxFit.fill,
-//              ),
-//              shape: RoundedRectangleBorder(
-//                borderRadius: BorderRadius.circular(10.0),
-//              ),
-//              elevation: 5,
-//              margin: EdgeInsets.all(10),
-//            );
-         // }
         },
       ),
     );
