@@ -1,23 +1,25 @@
 import 'package:news_app_flutter/fragments/categories_fragment.dart';
-import 'package:news_app_flutter/fragments/second_fragment.dart';
-import 'package:news_app_flutter/fragments/third_fragment.dart';
+import 'package:news_app_flutter/fragments/favorite_fragment.dart';
+import 'package:news_app_flutter/fragments/profile_fragment.dart';
+import 'package:news_app_flutter/fragments/info_fragment.dart';
+import 'package:news_app_flutter/fragments/settings_fragment.dart';
 import 'package:news_app_flutter/fetch_data/main_fetch_data.dart';
 import 'package:flutter/material.dart';
 
 class DrawerItem {
   String title;
   IconData icon;
+
   DrawerItem(this.title, this.icon);
 }
 
 class HomePage extends StatefulWidget {
   var drawerItems = [
     new DrawerItem("Home", Icons.home),
-    new DrawerItem("Apple", Icons.phone_iphone),
-    new DrawerItem("Samsung", Icons.phone_android),
-    new DrawerItem("Food", Icons.fastfood),
     new DrawerItem("Categories", Icons.category),
-    new DrawerItem("Fragment 2", Icons.rss_feed),
+    new DrawerItem("Favorite", Icons.bookmark_border),
+    new DrawerItem("Profile", Icons.face),
+    new DrawerItem("Settings", Icons.settings),
     new DrawerItem("Info", Icons.info)
   ];
 
@@ -33,15 +35,17 @@ class HomePageState extends State<HomePage> {
   _getDrawerItemWidget(int pos) {
     switch (pos) {
       case 0:
+        return new MainFetchData(
+            "https://newsapi.org/v2/everything?q=daily&apiKey=d9df3e32fcfb4dc880ec8cc179b924cf");
       case 1:
-      case 2:
-      case 3:
-        return new MainFetchData();
-      case 4:
         return new Categories();
+      case 2:
+        return new FavoriteFragment();
+      case 3:
+        return new ProfileFragment();
+      case 4:
+        return new SettingsFragment();
       case 5:
-        return new SecondFragment();
-      case 6:
         return new InfoFragment();
       default:
         return new Text("Error");
@@ -58,14 +62,12 @@ class HomePageState extends State<HomePage> {
     List<Widget> drawerOptions = [];
     for (var i = 0; i < widget.drawerItems.length; i++) {
       var d = widget.drawerItems[i];
-      drawerOptions.add(
-          new ListTile(
-            leading: new Icon(d.icon),
-            title: new Text(d.title),
-            selected: i == _selectedDrawerIndex,
-            onTap: () => _onSelectItem(i),
-          )
-      );
+      drawerOptions.add(new ListTile(
+        leading: new Icon(d.icon),
+        title: new Text(d.title),
+        selected: i == _selectedDrawerIndex,
+        onTap: () => _onSelectItem(i),
+      ));
     }
 
     return new Scaffold(
@@ -78,7 +80,9 @@ class HomePageState extends State<HomePage> {
         child: new Column(
           children: <Widget>[
             new UserAccountsDrawerHeader(
-                accountName: new Text("Flutter News"), accountEmail: null, currentAccountPicture: Image.asset('assets/newspaper.png')),
+                accountName: new Text("Flutter News"),
+                accountEmail: null,
+                currentAccountPicture: Image.asset('assets/newspaper.png')),
             new Column(children: drawerOptions)
           ],
         ),

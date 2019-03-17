@@ -2,13 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:splashscreen/splashscreen.dart';
 import 'package:news_app_flutter/pages/login_page.dart';
 
-void main(){
+void main() {
   runApp(new MaterialApp(
     home: new MyApp(),
     debugShowCheckedModeBanner: false,
   ));
 }
-
 
 class MyApp extends StatefulWidget {
   @override
@@ -19,20 +18,18 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return new SplashScreen(
-        seconds: 1,
+        seconds: 4,
         navigateAfterSeconds: new AfterSplash(),
-        title: new Text('Flutter News',
+        title: new Text(
+          'Flutter News',
           style: new TextStyle(
-            color: Colors.white,
-              fontWeight: FontWeight.bold,
-              fontSize: 35.0
-          ),),
+              color: Colors.white, fontWeight: FontWeight.bold, fontSize: 35.0),
+        ),
         image: new Image.asset('assets/newspaper.png'),
         backgroundColor: Colors.lightBlueAccent,
         styleTextUnderTheLoader: new TextStyle(),
         photoSize: 50.0,
-        loaderColor: Colors.white
-    );
+        loaderColor: Colors.white);
   }
 }
 

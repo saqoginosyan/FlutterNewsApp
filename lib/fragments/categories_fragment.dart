@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:news_app_flutter/fetch_data/main_fetch_data.dart';
 
 class Categories extends StatefulWidget {
   @override
@@ -17,30 +18,31 @@ class CategoriesState extends State<Categories> {
             preferredSize: Size.fromHeight(10),
             child: new Container(
               color: Colors.lightBlue,
-                child: Column(
-                  children: <Widget>[
-                    new Expanded(child: new Container()),
-                    new TabBar(
-                      tabs: [new Text("Sport"), new Text("Food"), new Text("People"), new Text("Tech") ],
-                    ),
-                  ],
-                ),
+              child: Column(
+                children: <Widget>[
+                  new Expanded(child: new Container()),
+                  new TabBar(
+                    tabs: [
+                      new Text("Sport"),
+                      new Text("Food"),
+                      new Text("Politics"),
+                      new Text("Tech")
+                    ],
+                  ),
+                ],
               ),
+            ),
           ),
           body: new TabBarView(
-            children: <Widget>[
-              new Column(
-                children: <Widget>[new Text("Sport Page")],
-              ),
-              new Column(
-                children: <Widget>[new Text("Food Page")],
-              ),
-              new Column(
-                children: <Widget>[new Text("People Page")],
-              ),
-              new Column(
-                children: <Widget>[new Text("Tech Page")],
-              )
+            children: [
+              MainFetchData(
+                  "https://newsapi.org/v2/everything?q=sport&apiKey=d9df3e32fcfb4dc880ec8cc179b924cf"),
+              MainFetchData(
+                  "https://newsapi.org/v2/everything?q=Food&apiKey=d9df3e32fcfb4dc880ec8cc179b924cf"),
+              MainFetchData(
+                  "https://newsapi.org/v2/everything?q=Politics&apiKey=d9df3e32fcfb4dc880ec8cc179b924cf"),
+              MainFetchData(
+                  "https://newsapi.org/v2/everything?q=Tech&apiKey=d9df3e32fcfb4dc880ec8cc179b924cf"),
             ],
           ),
         ),

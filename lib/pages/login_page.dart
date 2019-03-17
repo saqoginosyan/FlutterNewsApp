@@ -3,6 +3,7 @@ import 'package:news_app_flutter/pages/home_page.dart';
 
 class LoginPage extends StatefulWidget {
   static String tag = 'login-page';
+
   @override
   _LoginPageState createState() => new _LoginPageState();
 }

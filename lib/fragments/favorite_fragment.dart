@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-class SecondFragment extends StatelessWidget {
+class FavoriteFragment extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return new Center(
-      child: new Text("Hello Fragment 2"),
+      child: new Text("Favorite Fragment"),
     );
   }
 }
