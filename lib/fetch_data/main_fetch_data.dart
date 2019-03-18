@@ -56,38 +56,91 @@ class _MainFetchDataState extends State<MainFetchData> {
             : ListView.builder(
                 itemCount: list.length,
                 itemBuilder: (BuildContext context, int index) {
-                  return new Card(
-                    child: new Column(
-                      children: <Widget>[
-                        new Image.network(null != list[index].image
-                            ? list[index].image
-                            : 'https://imgplaceholder.com/420x320/d5f9fa/757575/glyphicon-book?text=_none_'),
-                        new Padding(
-                            padding: new EdgeInsets.all(7.0),
-                            child: new Row(
-                              children: <Widget>[
-                                new Padding(
-                                  padding: new EdgeInsets.all(8.0),
-                                  child: new Icon(Icons.bookmark_border,
-                                      color: Colors.blue),
-                                ),
-                                new Flexible(
-                                  child: new Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: <Widget>[
-                                      new Text(list[index].title,
-                                          style: new TextStyle(
-                                              fontSize: 18,
-                                              color: Colors.black87))
-                                    ],
+                  return new GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              MainCollapsingToolbar(item: list[index]),
+                        ),
+                      );
+                    },
+                    child: new Card(
+                      child: new Column(
+                        children: <Widget>[
+                          new Image.network(null != list[index].image
+                              ? list[index].image
+                              : 'https://imgplaceholder.com/420x320/d5f9fa/757575/glyphicon-book?text=_none_'),
+                          new Padding(
+                              padding: new EdgeInsets.all(7.0),
+                              child: new Row(
+                                children: <Widget>[
+                                  new Padding(
+                                    padding: new EdgeInsets.all(8.0),
+                                    child: new Icon(Icons.bookmark_border,
+                                        color: Colors.blue),
                                   ),
-                                ),
-                              ],
-                            ))
-                      ],
+                                  new Flexible(
+                                    child: new Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: <Widget>[
+                                        new Text(list[index].title,
+                                            style: new TextStyle(
+                                                fontSize: 18,
+                                                color: Colors.black87))
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ))
+                        ],
+                      ),
                     ),
                   );
                 }));
+  }
+}
+
+class MainCollapsingToolbar extends StatelessWidget {
+  final Item item;
+
+  MainCollapsingToolbar({Key key, @required this.item}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: NestedScrollView(
+        headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+          return <Widget>[
+            SliverAppBar(
+              expandedHeight: 250.0,
+              floating: false,
+              pinned: true,
+              flexibleSpace: FlexibleSpaceBar(
+                  centerTitle: true,
+                  title: Text(
+                      null != item.author
+                          ? "Author: " + item.author
+                          : "Author: Unknown",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 12.0,
+                      )),
+                  background: Image.network(
+                    item.image,
+                    fit: BoxFit.cover,
+                  )),
+            ),
+          ];
+        },
+        body: new Padding(
+          padding: new EdgeInsets.all(8.0),
+          child:
+              new Text(item.description * 10, style: TextStyle(fontSize: 18)),
+        ),
+      ),
+    );
   }
 }
