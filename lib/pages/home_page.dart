@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:image_picker/image_picker.dart';
 import 'package:news_app_flutter/fragments/categories_fragment.dart';
 import 'package:news_app_flutter/fragments/favorite_fragment.dart';
 import 'package:news_app_flutter/fragments/profile_fragment.dart';
@@ -31,6 +34,27 @@ class HomePage extends StatefulWidget {
 
 class HomePageState extends State<HomePage> {
   int _selectedDrawerIndex = 0;
+  File _image;
+
+  Future getImageCamera() async {
+    var image;
+
+    image = await ImagePicker.pickImage(source: ImageSource.camera);
+
+    setState(() {
+      _image = image;
+    });
+  }
+
+  Future getImageGallery() async {
+    var image;
+
+    image = await ImagePicker.pickImage(source: ImageSource.gallery);
+
+    setState(() {
+      _image = image;
+    });
+  }
 
   _getDrawerItemWidget(int pos) {
     switch (pos) {
@@ -80,9 +104,20 @@ class HomePageState extends State<HomePage> {
         child: new Column(
           children: <Widget>[
             new UserAccountsDrawerHeader(
-                accountName: new Text("Flutter News"),
-                accountEmail: null,
-                currentAccountPicture: Image.asset('assets/newspaper.png')),
+              accountName:
+                  new Text("Flutter News", style: TextStyle(fontSize: 25)),
+              accountEmail: null,
+              currentAccountPicture: new GestureDetector(
+                child: _image == null
+                    ? Image.asset('assets/add.ico')
+                    : Image.file(_image),
+                onTap: getImageCamera,
+              ),
+              decoration: new BoxDecoration(
+                gradient: LinearGradient(
+                    colors: <Color>[Colors.blueGrey, Colors.lightBlueAccent]),
+              ),
+            ),
             new Column(children: drawerOptions)
           ],
         ),

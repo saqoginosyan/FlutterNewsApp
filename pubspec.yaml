@@ -13,6 +13,7 @@ dependencies:
   http:
 
   cupertino_icons: ^0.1.2
+  image_picker: 0.4.12+1
 
 dev_dependencies:
   flutter_test:
@@ -23,4 +24,9 @@ flutter:
   assets:
     - assets/newspaper.png
     - assets/login.png
+    - assets/add.ico
+    - assets/breaking_news.jpg
+    - assets/profile.gif
+    - assets/camera.png
+    - assets/layers.png
 
