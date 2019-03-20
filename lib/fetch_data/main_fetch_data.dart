@@ -24,7 +24,7 @@ class _MainFetchDataState extends State<MainFetchData> {
     this.url = url;
   }
 
-  _fetchData() async {
+  Future<void> _fetchData() async {
     setState(() {
       isLoading = true;
     });
@@ -49,57 +49,63 @@ class _MainFetchDataState extends State<MainFetchData> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: isLoading
-            ? Center(
-                child: CircularProgressIndicator(),
-              )
-            : ListView.builder(
-                itemCount: list.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return new GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) =>
-                              MainCollapsingToolbar(item: list[index]),
-                        ),
-                      );
-                    },
-                    child: new Card(
-                      child: new Column(
-                        children: <Widget>[
-                          new Image.network(null != list[index].image
-                              ? list[index].image
-                              : 'https://imgplaceholder.com/420x320/d5f9fa/757575/glyphicon-book?text=_none_'),
-                          new Padding(
-                              padding: new EdgeInsets.all(7.0),
-                              child: new Row(
-                                children: <Widget>[
-                                  new Padding(
-                                    padding: new EdgeInsets.all(8.0),
-                                    child: new Icon(Icons.bookmark_border,
-                                        color: Colors.blue),
-                                  ),
-                                  new Flexible(
-                                    child: new Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: <Widget>[
-                                        new Text(list[index].title,
-                                            style: new TextStyle(
-                                                fontSize: 18,
-                                                color: Colors.black87))
-                                      ],
+      body: RefreshIndicator(
+          child: isLoading
+              ? Center(
+                  child: CircularProgressIndicator(),
+                )
+              : ListView.builder(
+                  itemCount: list.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return new GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                MainCollapsingToolbar(item: list[index]),
+                          ),
+                        );
+                      },
+                      child: new Card(
+                        child: new Column(
+                          children: <Widget>[
+                            new Image.network(null != list[index].image
+                                ? list[index].image
+                                : 'https://imgplaceholder.com/420x320/d5f9fa/757575/glyphicon-book?text=_none_'),
+                            new Padding(
+                                padding: new EdgeInsets.all(7.0),
+                                child: new Row(
+                                  children: <Widget>[
+                                    new Padding(
+                                      padding: new EdgeInsets.all(8.0),
+                                      child: new GestureDetector(
+                                        child: new Icon(Icons.bookmark_border,
+                                            color: Colors.blue),
+                                        onTap: _fetchData,
+                                      ),
                                     ),
-                                  ),
-                                ],
-                              ))
-                        ],
+                                    new Flexible(
+                                      child: new Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          new Text(list[index].title,
+                                              style: new TextStyle(
+                                                  fontSize: 18,
+                                                  color: Colors.black87))
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ))
+                          ],
+                        ),
                       ),
-                    ),
-                  );
-                }));
+                    );
+                  }),
+          onRefresh: _fetchData),
+    );
   }
 }
 

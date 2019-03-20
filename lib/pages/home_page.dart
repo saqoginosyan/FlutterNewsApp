@@ -76,6 +76,35 @@ class HomePageState extends State<HomePage> {
     }
   }
 
+  addPhoto() async {
+    return showDialog<void>(
+      context: context,
+      barrierDismissible: true, // user must tap button!
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Select upload method.',
+              style: TextStyle(color: Colors.blueGrey, fontSize: 21)),
+          actions: <Widget>[
+            FlatButton(
+              child: Icon(Icons.photo_library, color: Colors.blueGrey),
+              onPressed: () {
+                Navigator.of(context).pop();
+                getImageGallery();
+              },
+            ),
+            FlatButton(
+              child: Icon(Icons.add_a_photo, color: Colors.blueGrey),
+              onPressed: () {
+                Navigator.of(context).pop();
+                getImageCamera();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   _onSelectItem(int index) {
     setState(() => _selectedDrawerIndex = index);
     Navigator.of(context).pop(); // close the drawer
@@ -99,6 +128,7 @@ class HomePageState extends State<HomePage> {
         // here we display the title corresponding to the fragment
         // you can instead choose to have a static title
         title: new Text(widget.drawerItems[_selectedDrawerIndex].title),
+        centerTitle: true,
       ),
       drawer: new Drawer(
         child: new Column(
@@ -110,8 +140,9 @@ class HomePageState extends State<HomePage> {
               currentAccountPicture: new GestureDetector(
                 child: _image == null
                     ? Image.asset('assets/add.ico')
-                    : Image.file(_image),
-                onTap: getImageCamera,
+                    : new CircleAvatar(
+                        backgroundImage: new FileImage(_image), radius: 200.0),
+                onTap: addPhoto,
               ),
               decoration: new BoxDecoration(
                 gradient: LinearGradient(
