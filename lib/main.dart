@@ -1,6 +1,7 @@
-import 'package:flutter/material.dart';
+import 'package:news_app_flutter/services/authentication.dart';
+import 'package:news_app_flutter/pages/root_page.dart';
 import 'package:splashscreen/splashscreen.dart';
-import 'package:news_app_flutter/pages/login_page.dart';
+import 'package:flutter/material.dart';
 
 void main() {
   runApp(new MaterialApp(
@@ -38,7 +39,7 @@ class AfterSplash extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: LoginPage(),
+      home: new RootPage(auth: new Auth()),
     );
   }
 }

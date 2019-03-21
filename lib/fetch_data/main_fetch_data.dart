@@ -1,8 +1,8 @@
-import 'dart:convert';
-
-import 'package:flutter/material.dart';
 import 'package:news_app_flutter/fetch_data/item.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 import 'package:http/http.dart' as http;
+import 'package:flutter/material.dart';
+import 'dart:convert';
 
 class MainFetchData extends StatefulWidget {
   String url;
@@ -104,7 +104,9 @@ class _MainFetchDataState extends State<MainFetchData> {
                       ),
                     );
                   }),
-          onRefresh: _fetchData, color: Colors.white, backgroundColor: Colors.lightBlue),
+          onRefresh: _fetchData,
+          color: Colors.white,
+          backgroundColor: Colors.lightBlue),
     );
   }
 }
@@ -141,12 +143,38 @@ class MainCollapsingToolbar extends StatelessWidget {
             ),
           ];
         },
-        body: new Padding(
-          padding: new EdgeInsets.all(8.0),
-          child:
-              new Text(item.description * 10, style: TextStyle(fontSize: 18)),
+        body: new ListView(
+          children: <Widget>[
+            new Padding(
+              padding: new EdgeInsets.all(8.0),
+              child: new Text(item.description * 10,
+                  style: TextStyle(fontSize: 18)),
+            ),
+            new RaisedButton(
+                color: Colors.blueGrey,
+                onPressed: () {
+                  showWebView(context);
+                },
+                child: new Text(
+                  "Open Source Page",
+                  style: new TextStyle(color: Colors.white),
+                )),
+          ],
         ),
       ),
     );
+  }
+
+  void showWebView(BuildContext context) {
+    var webView = WebView(
+      initialUrl: item.url,
+      javascriptMode: JavascriptMode.unrestricted,
+    );
+
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return webView;
+        });
   }
 }
