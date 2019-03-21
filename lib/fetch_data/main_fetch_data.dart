@@ -104,7 +104,7 @@ class _MainFetchDataState extends State<MainFetchData> {
                       ),
                     );
                   }),
-          onRefresh: _fetchData),
+          onRefresh: _fetchData, color: Colors.white, backgroundColor: Colors.lightBlue),
     );
   }
 }
