@@ -18,7 +18,37 @@ class MainFetchData extends StatefulWidget {
 class _MainFetchDataState extends State<MainFetchData> {
   List<Item> list = List();
   var isLoading = false;
+  int page = 1;
   String url;
+
+  ScrollController _controller;
+  String message = "";
+
+  _scrollListener() async {
+    if (_controller.offset >= _controller.position.maxScrollExtent &&
+        !_controller.position.outOfRange) {
+      50 == page ? page = 1 : ++page;
+
+      url += "&page=${page.toString()}";
+
+      initState();
+    }
+  }
+
+  @override
+  void initState() {
+    _controller = ScrollController();
+    _controller.addListener(_scrollListener);
+    _fetchData();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _controller.removeListener(_scrollListener);
+    _controller.dispose();
+    super.dispose();
+  }
 
   _MainFetchDataState(String url) {
     this.url = url;
@@ -30,20 +60,15 @@ class _MainFetchDataState extends State<MainFetchData> {
     });
     final response = await http.get(url);
     if (response.statusCode == 200) {
-      list = (json.decode(response.body.toString())['articles'] as List)
+      list.addAll((json.decode(response.body.toString())['articles'] as List)
           .map((data) => new Item.fromJson(data))
-          .toList();
+          .toList());
       setState(() {
         isLoading = false;
       });
     } else {
       throw Exception('Failed to load photos');
     }
-  }
-
-  @override
-  void initState() {
-    _fetchData();
   }
 
   @override
@@ -55,6 +80,7 @@ class _MainFetchDataState extends State<MainFetchData> {
                   child: CircularProgressIndicator(),
                 )
               : ListView.builder(
+                  controller: _controller,
                   itemCount: list.length,
                   itemBuilder: (BuildContext context, int index) {
                     return new GestureDetector(
@@ -129,9 +155,9 @@ class MainCollapsingToolbar extends StatelessWidget {
               flexibleSpace: FlexibleSpaceBar(
                   centerTitle: true,
                   title: Text(
-                      null != item.author
-                          ? "Author: " + item.author
-                          : "Author: Unknown",
+                      null == item.author || item.author.isEmpty
+                          ? "Author: Unknown"
+                          : "Author: " + item.author,
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 12.0,
