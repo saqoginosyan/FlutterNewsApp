@@ -24,7 +24,8 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
-    - assets/newspaper.png
-    - assets/login.png
-    - assets/add.ico
-    - assets/breaking_news.jpg
+  - assets/newspaper.png
+  - assets/login.png
+  - assets/add.ico
+  - assets/breaking_news.jpg
+  - assets/news_placeholder.jpg

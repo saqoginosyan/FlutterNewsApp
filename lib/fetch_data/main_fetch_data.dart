@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:news_app_flutter/fetch_data/item.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:http/http.dart' as http;
@@ -6,9 +8,11 @@ import 'dart:convert';
 
 class MainFetchData extends StatefulWidget {
   String url;
+  String mainUrl;
 
   MainFetchData(String url) {
     this.url = url;
+    this.mainUrl = url;
   }
 
   @override
@@ -20,18 +24,30 @@ class _MainFetchDataState extends State<MainFetchData> {
   var isLoading = false;
   int page = 1;
   String url;
+  String mainUrl;
 
   ScrollController _controller;
   String message = "";
 
+  final MAX_PAGE_SIZE = 50;
+
   _scrollListener() async {
     if (_controller.offset >= _controller.position.maxScrollExtent &&
         !_controller.position.outOfRange) {
-      50 == page ? page = 1 : ++page;
-
-      url += "&page=${page.toString()}";
-
-      initState();
+      ++page;
+      if (MAX_PAGE_SIZE == page) {
+        return;
+      }
+      url = mainUrl + "&page=${page.toString()}";
+      final response = await http.get(url);
+      if (response.statusCode == 200) {
+        list.addAll((json.decode(response.body.toString())['articles'] as List)
+            .map((data) => new Item.fromJson(data))
+            .toList());
+        setState(() {});
+      } else {
+        throw Exception('Failed to load photos');
+      }
     }
   }
 
@@ -52,6 +68,7 @@ class _MainFetchDataState extends State<MainFetchData> {
 
   _MainFetchDataState(String url) {
     this.url = url;
+    this.mainUrl = url;
   }
 
   Future<void> _fetchData() async {
@@ -63,12 +80,12 @@ class _MainFetchDataState extends State<MainFetchData> {
       list.addAll((json.decode(response.body.toString())['articles'] as List)
           .map((data) => new Item.fromJson(data))
           .toList());
-      setState(() {
-        isLoading = false;
-      });
     } else {
       throw Exception('Failed to load photos');
     }
+    setState(() {
+      isLoading = false;
+    });
   }
 
   @override
@@ -96,9 +113,13 @@ class _MainFetchDataState extends State<MainFetchData> {
                       child: new Card(
                         child: new Column(
                           children: <Widget>[
-                            new Image.network(null != list[index].image
-                                ? list[index].image
-                                : 'https://imgplaceholder.com/420x320/d5f9fa/757575/glyphicon-book?text=_none_'),
+                            new FadeInImage(
+                              placeholder:
+                                  AssetImage('assets/news_placeholder.jpg'),
+                              image: NetworkImage(null != list[index].image
+                                  ? list[index].image
+                                  : 'https://imgplaceholder.com/420x320/d5f9fa/757575/glyphicon-book?text=_none_'),
+                            ),
                             new Padding(
                                 padding: new EdgeInsets.all(7.0),
                                 child: new Row(
