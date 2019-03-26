@@ -1,9 +1,11 @@
 import 'dart:async';
 
+import 'package:news_app_flutter/custom_floating_button/menu_floating_button.dart';
 import 'package:news_app_flutter/fetch_data/item.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'dart:math' as math;
 import 'dart:convert';
 
 class MainFetchData extends StatefulWidget {
@@ -166,62 +168,40 @@ class MainCollapsingToolbar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: NestedScrollView(
-        headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-          return <Widget>[
-            SliverAppBar(
-              expandedHeight: 250.0,
-              floating: false,
-              pinned: true,
-              flexibleSpace: FlexibleSpaceBar(
-                  centerTitle: true,
-                  title: Text(
-                      null == item.author || item.author.isEmpty
-                          ? "Author: Unknown"
-                          : "Author: " + item.author,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 12.0,
-                      )),
-                  background: Image.network(
-                    item.image,
-                    fit: BoxFit.cover,
-                  )),
-            ),
-          ];
-        },
-        body: new ListView(
-          children: <Widget>[
-            new Padding(
-              padding: new EdgeInsets.all(8.0),
-              child: new Text(item.description * 10,
-                  style: TextStyle(fontSize: 18)),
-            ),
-            new RaisedButton(
-                color: Colors.blueGrey,
-                onPressed: () {
-                  showWebView(context);
-                },
-                child: new Text(
-                  "Open Source Page",
-                  style: new TextStyle(color: Colors.white),
-                )),
-          ],
+        body: new Stack(
+      children: <Widget>[
+        new NestedScrollView(
+          headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+            return <Widget>[
+              new SliverAppBar(
+                expandedHeight: 250.0,
+                floating: false,
+                pinned: true,
+                flexibleSpace: FlexibleSpaceBar(
+                    centerTitle: true,
+                    title: Text(
+                        null == item.author || item.author.isEmpty
+                            ? "Author: Unknown"
+                            : "Author: " + item.author,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 12.0,
+                        )),
+                    background: Image.network(
+                      item.image,
+                      fit: BoxFit.cover,
+                    )),
+              ),
+            ];
+          },
+          body: new Padding(
+            padding: new EdgeInsets.all(8.0),
+            child:
+                new Text(item.description * 10, style: TextStyle(fontSize: 18)),
+          ),
         ),
-      ),
-    );
-  }
-
-  void showWebView(BuildContext context) {
-    var webView = WebView(
-      initialUrl: item.url,
-      javascriptMode: JavascriptMode.unrestricted,
-    );
-
-    showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return webView;
-        });
+        new MenuFloatingButton(item: item),
+      ],
+    ));
   }
 }
