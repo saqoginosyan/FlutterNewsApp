@@ -2,10 +2,8 @@ import 'dart:async';
 
 import 'package:news_app_flutter/custom_floating_button/menu_floating_button.dart';
 import 'package:news_app_flutter/fetch_data/item.dart';
-import 'package:webview_flutter/webview_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
-import 'dart:math' as math;
 import 'dart:convert';
 
 class MainFetchData extends StatefulWidget {
