@@ -28,7 +28,7 @@ class DatabaseHelper {
   void _onCreate(Database db, int version) async {
     // When creating the db, create the table
     await db.execute(
-        "CREATE TABLE News(id INTEGER PRIMARY KEY, title TEXT, image BLOB, description TEXT, author TEXT)");
+        "CREATE TABLE News(id INTEGER PRIMARY KEY, title TEXT UNIQUE, image BLOB, description TEXT, author TEXT)");
   }
 
   Future<int> saveNews(News news) async {

@@ -1,8 +1,6 @@
 import 'package:news_app_flutter/database/database_helper.dart';
 import 'package:news_app_flutter/database/news.dart';
-import 'package:news_app_flutter/fetch_data/item.dart';
 import 'package:webview_flutter/webview_flutter.dart';
-import 'package:connectivity/connectivity.dart';
 import 'package:flutter/animation.dart';
 import 'package:flutter/material.dart';
 
@@ -10,14 +8,14 @@ class MenuFloatingButton extends StatefulWidget {
   @override
   MenuFloatingButtonState createState() => new MenuFloatingButtonState(item);
 
-  Item item;
+  var item;
 
   MenuFloatingButton({Key key, @required this.item}) : super(key: key);
 }
 
 class MenuFloatingButtonState extends State<MenuFloatingButton>
     with TickerProviderStateMixin {
-  Item item;
+  var item;
 
   int _angle = 90;
   bool _isRotated = true;
@@ -29,9 +27,7 @@ class MenuFloatingButtonState extends State<MenuFloatingButton>
 
   var db = new DatabaseHelper();
 
-  List<News> hey;
-
-  MenuFloatingButtonState(Item item) {
+  MenuFloatingButtonState(var item) {
     this.item = item;
   }
 
@@ -78,17 +74,6 @@ class MenuFloatingButtonState extends State<MenuFloatingButton>
     print(item);
     var news = new News(item.title, item.image, item.description, item.author);
     db.updateBook(news);
-  }
-
-  _checkInternetConnectivity() async {
-    var result = await Connectivity().checkConnectivity();
-    if (result == ConnectivityResult.none) {
-      print("Not connected to a network");
-    } else if (result == ConnectivityResult.mobile) {
-      print("Connected over mobile data");
-    } else if (result == ConnectivityResult.wifi) {
-      debugPrint("Connected over wifi");
-    }
   }
 
   @override
@@ -140,10 +125,7 @@ class MenuFloatingButtonState extends State<MenuFloatingButton>
                       child: new InkWell(
                         onTap: () {
                           if (_angle == 45.0) {
-                            for(News l in hey) {
-                              print(l.title);
-                            }
-                            //showWebView(context);
+                            showWebView(context);
                           }
                         },
                         child: new Center(
@@ -172,9 +154,7 @@ class MenuFloatingButtonState extends State<MenuFloatingButton>
                     child: new InkWell(
                       onTap: () {
                         if (_angle == 45.0) {
-                          db.getNews().then((list) => {
-                            hey = list,
-                          });
+                          getAllNews();
                         }
                       },
                       child: new Center(
@@ -225,5 +205,13 @@ class MenuFloatingButtonState extends State<MenuFloatingButton>
         builder: (BuildContext context) {
           return webView;
         });
+  }
+
+  void getAllNews() async {
+    List<News> hey;
+    hey = await db.getNews();
+    for (News l in hey) {
+      print(l.title);
+    }
   }
 }

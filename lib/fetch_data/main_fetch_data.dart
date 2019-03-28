@@ -1,6 +1,8 @@
 import 'dart:async';
 
+import 'package:connectivity/connectivity.dart';
 import 'package:news_app_flutter/custom_floating_button/menu_floating_button.dart';
+import 'package:news_app_flutter/database/database_helper.dart';
 import 'package:news_app_flutter/fetch_data/item.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
@@ -20,7 +22,8 @@ class MainFetchData extends StatefulWidget {
 }
 
 class _MainFetchDataState extends State<MainFetchData> {
-  List<Item> list = List();
+  var list = List();
+
   var isLoading = false;
   int page = 1;
   String url;
@@ -30,6 +33,8 @@ class _MainFetchDataState extends State<MainFetchData> {
   String message = "";
 
   final MAX_PAGE_SIZE = 50;
+
+  var db = new DatabaseHelper();
 
   _scrollListener() async {
     if (_controller.offset >= _controller.position.maxScrollExtent &&
@@ -75,13 +80,18 @@ class _MainFetchDataState extends State<MainFetchData> {
     setState(() {
       isLoading = true;
     });
-    final response = await http.get(url);
-    if (response.statusCode == 200) {
-      list.addAll((json.decode(response.body.toString())['articles'] as List)
-          .map((data) => new Item.fromJson(data))
-          .toList());
+    var result = await Connectivity().checkConnectivity();
+    if (result == ConnectivityResult.none) {
+      await db.getNews().then((list) => this.list = list);
     } else {
-      throw Exception('Failed to load photos');
+      final response = await http.get(url);
+      if (response.statusCode == 200) {
+        list.addAll((json.decode(response.body.toString())['articles'] as List)
+            .map((data) => new Item.fromJson(data))
+            .toList());
+      } else {
+        throw Exception('Failed to load photos');
+      }
     }
     setState(() {
       isLoading = false;
@@ -159,7 +169,7 @@ class _MainFetchDataState extends State<MainFetchData> {
 }
 
 class MainCollapsingToolbar extends StatelessWidget {
-  final Item item;
+  var item;
 
   MainCollapsingToolbar({Key key, @required this.item}) : super(key: key);
 
