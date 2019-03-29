@@ -1,12 +1,12 @@
-import 'dart:async';
-
-import 'package:connectivity/connectivity.dart';
 import 'package:news_app_flutter/custom_floating_button/menu_floating_button.dart';
 import 'package:news_app_flutter/database/database_helper.dart';
 import 'package:news_app_flutter/fetch_data/item.dart';
+import 'package:connectivity/connectivity.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'dart:convert';
+import 'dart:async';
 
 class MainFetchData extends StatefulWidget {
   String url;
@@ -83,6 +83,13 @@ class _MainFetchDataState extends State<MainFetchData> {
     var result = await Connectivity().checkConnectivity();
     if (result == ConnectivityResult.none) {
       await db.getNews().then((list) => this.list = list);
+      if (list.length > 0) {
+        Fluttertoast.showToast(
+            msg: "  Saved News  ", backgroundColor: Colors.blue);
+      } else {
+        Fluttertoast.showToast(
+            msg: "  No Saved News  ", backgroundColor: Colors.blue);
+      }
     } else {
       final response = await http.get(url);
       if (response.statusCode == 200) {

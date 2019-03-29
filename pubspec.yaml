@@ -19,6 +19,7 @@ dependencies:
   connectivity: 0.4.2
   sqflite: ^1.0.0
   path_provider: ^0.4.1
+  fluttertoast: ^3.0.3
 
 dev_dependencies:
   flutter_test:

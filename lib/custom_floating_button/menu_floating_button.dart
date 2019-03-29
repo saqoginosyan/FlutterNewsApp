@@ -1,6 +1,7 @@
 import 'package:news_app_flutter/database/database_helper.dart';
-import 'package:news_app_flutter/database/news.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+import 'package:news_app_flutter/database/news.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:flutter/animation.dart';
 import 'package:flutter/material.dart';
 
@@ -97,6 +98,7 @@ class MenuFloatingButtonState extends State<MenuFloatingButton>
                         onTap: () {
                           if (_angle == 45.0) {
                             addRecord();
+                            Fluttertoast.showToast(msg: "  Saved  ", backgroundColor: Colors.blue);
                           }
                         },
                         child: new Center(
@@ -126,6 +128,7 @@ class MenuFloatingButtonState extends State<MenuFloatingButton>
                         onTap: () {
                           if (_angle == 45.0) {
                             showWebView(context);
+                            Fluttertoast.showToast(msg: "  Source page  ", backgroundColor: Colors.blue);
                           }
                         },
                         child: new Center(
