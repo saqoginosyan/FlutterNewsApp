@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:news_app_flutter/custom_floating_button/menu_floating_button.dart';
 import 'package:news_app_flutter/database/database_helper.dart';
 import 'package:news_app_flutter/fetch_data/item.dart';
@@ -22,25 +24,28 @@ class MainFetchData extends StatefulWidget {
 }
 
 class _MainFetchDataState extends State<MainFetchData> {
+  ScrollController _controller;
   var list = List();
-
   var isLoading = false;
-  int page = 1;
+  var db = new DatabaseHelper();
+  var result;
   String url;
   String mainUrl;
-
-  ScrollController _controller;
   String message = "";
+  int page = 1;
+  bool connectivity = false;
+  final maxPageSize = 50;
 
-  final MAX_PAGE_SIZE = 50;
-
-  var db = new DatabaseHelper();
+  _MainFetchDataState(String url) {
+    this.url = url;
+    this.mainUrl = url;
+  }
 
   _scrollListener() async {
     if (_controller.offset >= _controller.position.maxScrollExtent &&
         !_controller.position.outOfRange) {
       ++page;
-      if (MAX_PAGE_SIZE == page) {
+      if (maxPageSize == page) {
         return;
       }
       url = mainUrl + "&page=${page.toString()}";
@@ -71,16 +76,11 @@ class _MainFetchDataState extends State<MainFetchData> {
     super.dispose();
   }
 
-  _MainFetchDataState(String url) {
-    this.url = url;
-    this.mainUrl = url;
-  }
-
   Future<void> _fetchData() async {
     setState(() {
       isLoading = true;
     });
-    var result = await Connectivity().checkConnectivity();
+    result = await Connectivity().checkConnectivity();
     if (result == ConnectivityResult.none) {
       await db.getNews().then((list) => this.list = list);
       if (list.length > 0) {
@@ -90,6 +90,7 @@ class _MainFetchDataState extends State<MainFetchData> {
         Fluttertoast.showToast(
             msg: "  No Saved News  ", backgroundColor: Colors.blue);
       }
+      connectivity = true;
     } else {
       final response = await http.get(url);
       if (response.statusCode == 200) {
@@ -99,10 +100,22 @@ class _MainFetchDataState extends State<MainFetchData> {
       } else {
         throw Exception('Failed to load photos');
       }
+      connectivity = false;
     }
     setState(() {
       isLoading = false;
     });
+  }
+
+  ImageProvider _setImage(var image) {
+    ImageProvider imageProvider;
+    if (result == ConnectivityResult.none) {
+      Uint8List bytes = base64.decode(image);
+      imageProvider = MemoryImage(bytes);
+    } else {
+      imageProvider = NetworkImage(image);
+    }
+    return imageProvider;
   }
 
   @override
@@ -122,8 +135,8 @@ class _MainFetchDataState extends State<MainFetchData> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) =>
-                                MainCollapsingToolbar(item: list[index]),
+                            builder: (context) => MainCollapsingToolbar(
+                                item: list[index], connectivity: connectivity),
                           ),
                         );
                       },
@@ -133,9 +146,9 @@ class _MainFetchDataState extends State<MainFetchData> {
                             new FadeInImage(
                               placeholder:
                                   AssetImage('assets/news_placeholder.jpg'),
-                              image: NetworkImage(null != list[index].image
-                                  ? list[index].image
-                                  : 'https://imgplaceholder.com/420x320/d5f9fa/757575/glyphicon-book?text=_none_'),
+                              image: null != list[index].image
+                                  ? _setImage(list[index].image)
+                                  : AssetImage('assets/news_placeholder.jpg'),
                             ),
                             new Padding(
                                 padding: new EdgeInsets.all(7.0),
@@ -168,7 +181,7 @@ class _MainFetchDataState extends State<MainFetchData> {
                       ),
                     );
                   }),
-          onRefresh: _fetchData,
+          onRefresh:  _fetchData,
           color: Colors.white,
           backgroundColor: Colors.lightBlue),
     );
@@ -177,8 +190,27 @@ class _MainFetchDataState extends State<MainFetchData> {
 
 class MainCollapsingToolbar extends StatelessWidget {
   var item;
+  var result;
+  bool connectivity;
 
-  MainCollapsingToolbar({Key key, @required this.item}) : super(key: key);
+  MainCollapsingToolbar(
+      {Key key, @required this.item, @required this.connectivity})
+      : super(key: key);
+
+  Image _setImage(var image) {
+    Image dbImage;
+
+    if (connectivity) {
+      Uint8List bytes = base64.decode(image);
+      dbImage = Image.memory(bytes, fit: BoxFit.cover);
+    } else {
+      dbImage = Image.network(
+        image,
+        fit: BoxFit.cover,
+      );
+    }
+    return dbImage;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -202,10 +234,7 @@ class MainCollapsingToolbar extends StatelessWidget {
                           color: Colors.white,
                           fontSize: 12.0,
                         )),
-                    background: Image.network(
-                      item.image,
-                      fit: BoxFit.cover,
-                    )),
+                    background: _setImage(item.image)),
               ),
             ];
           },

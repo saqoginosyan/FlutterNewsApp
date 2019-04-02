@@ -7,6 +7,7 @@ import 'dart:async';
 
 class DatabaseHelper {
   static final DatabaseHelper _instance = new DatabaseHelper.internal();
+
   factory DatabaseHelper() => _instance;
   static Database _db;
 
@@ -42,7 +43,8 @@ class DatabaseHelper {
     List<Map> list = await dbClient.rawQuery('SELECT * FROM News');
     List<News> employees = new List();
     for (int i = 0; i < list.length; i++) {
-      var news = new News(list[i]["title"], list[i]["image"], list[i]["description"], list[i]["author"]);
+      var news = new News(list[i]["title"], list[i]["image"],
+          list[i]["description"], list[i]["author"]);
       news.setNewsId(list[i]["id"]);
       employees.add(news);
     }
@@ -52,7 +54,8 @@ class DatabaseHelper {
 
   Future<int> deleteNews(News news) async {
     var dbClient = await db;
-    int res = await dbClient.rawDelete('DELETE FROM News WHERE id = ?', [news.id]);
+    int res =
+        await dbClient.rawDelete('DELETE FROM News WHERE id = ?', [news.id]);
     return res;
   }
 
@@ -63,12 +66,12 @@ class DatabaseHelper {
     return res > 0 ? true : false;
   }
 
-  Future updateBook(News news) async {
+  Future updateNews(News news) async {
     var dbClient = await db;
     print(dbClient);
 
     await dbClient.rawInsert(
-          'INSERT OR REPLACE INTO News (title, image, description, author)'
-            ' VALUES("${news.title}", "${news.image}", "${news.description}", "${news.author}")');
+        'INSERT OR REPLACE INTO News (title, image, description, author)'
+        ' VALUES("${news.title}", "${news.image}", "${news.description}", "${news.author}")');
   }
 }

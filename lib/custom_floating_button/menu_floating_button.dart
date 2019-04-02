@@ -2,24 +2,22 @@ import 'package:news_app_flutter/database/database_helper.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:news_app_flutter/database/news.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:http/http.dart' as http;
 import 'package:flutter/animation.dart';
 import 'package:flutter/material.dart';
+import 'dart:convert';
 
 class MenuFloatingButton extends StatefulWidget {
+  var item;
+
   @override
   MenuFloatingButtonState createState() => new MenuFloatingButtonState(item);
-
-  var item;
 
   MenuFloatingButton({Key key, @required this.item}) : super(key: key);
 }
 
 class MenuFloatingButtonState extends State<MenuFloatingButton>
     with TickerProviderStateMixin {
-  var item;
-
-  int _angle = 90;
-  bool _isRotated = true;
 
   AnimationController _controller;
   Animation<double> _animation;
@@ -27,6 +25,9 @@ class MenuFloatingButtonState extends State<MenuFloatingButton>
   Animation<double> _animation3;
 
   var db = new DatabaseHelper();
+  var item;
+  int _angle = 90;
+  bool _isRotated = true;
 
   MenuFloatingButtonState(var item) {
     this.item = item;
@@ -72,9 +73,18 @@ class MenuFloatingButtonState extends State<MenuFloatingButton>
   }
 
   Future addRecord() async {
-    print(item);
-    var news = new News(item.title, item.image, item.description, item.author);
-    db.updateBook(news);
+    String _base64;
+    http.Response response = await http.get(
+      item.image,
+    );
+    if (mounted) {
+      setState(() {
+        _base64 = base64.encode(response.bodyBytes);
+      });
+    }
+
+    var news = new News(item.title, _base64, item.description, item.author);
+    db.updateNews(news);
   }
 
   @override
@@ -157,7 +167,6 @@ class MenuFloatingButtonState extends State<MenuFloatingButton>
                     child: new InkWell(
                       onTap: () {
                         if (_angle == 45.0) {
-                          getAllNews();
                         }
                       },
                       child: new Center(
@@ -208,13 +217,5 @@ class MenuFloatingButtonState extends State<MenuFloatingButton>
         builder: (BuildContext context) {
           return webView;
         });
-  }
-
-  void getAllNews() async {
-    List<News> hey;
-    hey = await db.getNews();
-    for (News l in hey) {
-      print(l.title);
-    }
   }
 }
