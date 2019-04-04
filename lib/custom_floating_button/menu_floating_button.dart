@@ -18,7 +18,6 @@ class MenuFloatingButton extends StatefulWidget {
 
 class MenuFloatingButtonState extends State<MenuFloatingButton>
     with TickerProviderStateMixin {
-
   AnimationController _controller;
   Animation<double> _animation;
   Animation<double> _animation2;
@@ -72,8 +71,9 @@ class MenuFloatingButtonState extends State<MenuFloatingButton>
     });
   }
 
-  Future addRecord() async {
+  Future addRecord(String tableName) async {
     String _base64;
+    var news;
     http.Response response = await http.get(
       item.image,
     );
@@ -83,8 +83,15 @@ class MenuFloatingButtonState extends State<MenuFloatingButton>
       });
     }
 
-    var news = new News(item.title, _base64, item.description, item.author);
-    db.updateNews(news);
+    if ("news" == tableName) {
+      news = new News(
+          item.title, _base64, item.description, item.author, item.url);
+    } else if ("fav" == tableName) {
+      news = new News(
+          item.title, item.image, item.description, item.author, item.url);
+    }
+
+    db.updateNews(news, tableName);
   }
 
   @override
@@ -107,8 +114,9 @@ class MenuFloatingButtonState extends State<MenuFloatingButton>
                       child: new InkWell(
                         onTap: () {
                           if (_angle == 45.0) {
-                            addRecord();
-                            Fluttertoast.showToast(msg: "  Saved  ", backgroundColor: Colors.blue);
+                            addRecord("news");
+                            Fluttertoast.showToast(
+                                msg: "  Saved  ", backgroundColor: Colors.blue);
                           }
                         },
                         child: new Center(
@@ -138,7 +146,9 @@ class MenuFloatingButtonState extends State<MenuFloatingButton>
                         onTap: () {
                           if (_angle == 45.0) {
                             showWebView(context);
-                            Fluttertoast.showToast(msg: "  Source page  ", backgroundColor: Colors.blue);
+                            Fluttertoast.showToast(
+                                msg: "  Source page  ",
+                                backgroundColor: Colors.blue);
                           }
                         },
                         child: new Center(
@@ -167,6 +177,10 @@ class MenuFloatingButtonState extends State<MenuFloatingButton>
                     child: new InkWell(
                       onTap: () {
                         if (_angle == 45.0) {
+                          addRecord("fav");
+                          Fluttertoast.showToast(
+                              msg: "  Added to favorites  ",
+                              backgroundColor: Colors.blue);
                         }
                       },
                       child: new Center(

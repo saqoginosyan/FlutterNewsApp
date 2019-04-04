@@ -12,7 +12,6 @@ class InfoFragment extends StatefulWidget {
 class InfoFragmentState extends State<InfoFragment> {
   String _base64;
 
-
   @override
   void initState() {
     super.initState();
@@ -30,15 +29,13 @@ class InfoFragmentState extends State<InfoFragment> {
 
   @override
   Widget build(BuildContext context) {
-    if (_base64 == null)
-      return new Container();
+    if (_base64 == null) return new Container();
 
     Uint8List bytes = base64.decode(_base64);
 
     return new Container(
         child: Scaffold(
-          body: Image.memory(bytes),
-        )
-    );
+      body: Image.memory(bytes),
+    ));
   }
 }

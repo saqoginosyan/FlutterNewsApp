@@ -1,5 +1,3 @@
-import 'dart:typed_data';
-
 import 'package:news_app_flutter/custom_floating_button/menu_floating_button.dart';
 import 'package:news_app_flutter/database/database_helper.dart';
 import 'package:news_app_flutter/fetch_data/item.dart';
@@ -7,6 +5,7 @@ import 'package:connectivity/connectivity.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'dart:typed_data';
 import 'dart:convert';
 import 'dart:async';
 
@@ -56,7 +55,7 @@ class _MainFetchDataState extends State<MainFetchData> {
             .toList());
         setState(() {});
       } else {
-        throw Exception('Failed to load photos');
+        throw Exception('Failed to load news');
       }
     }
   }
@@ -82,7 +81,7 @@ class _MainFetchDataState extends State<MainFetchData> {
     });
     result = await Connectivity().checkConnectivity();
     if (result == ConnectivityResult.none) {
-      await db.getNews().then((list) => this.list = list);
+      await db.getNews("news").then((list) => this.list = list);
       if (list.length > 0) {
         Fluttertoast.showToast(
             msg: "  Saved News  ", backgroundColor: Colors.blue);
@@ -98,7 +97,7 @@ class _MainFetchDataState extends State<MainFetchData> {
             .map((data) => new Item.fromJson(data))
             .toList());
       } else {
-        throw Exception('Failed to load photos');
+        throw Exception('Failed to load news');
       }
       connectivity = false;
     }
@@ -136,7 +135,9 @@ class _MainFetchDataState extends State<MainFetchData> {
                           context,
                           MaterialPageRoute(
                             builder: (context) => MainCollapsingToolbar(
-                                item: list[index], connectivity: connectivity),
+                                item: list[index],
+                                connectivity: connectivity,
+                                tableName: "news"),
                           ),
                         );
                       },
@@ -157,9 +158,12 @@ class _MainFetchDataState extends State<MainFetchData> {
                                     new Padding(
                                       padding: new EdgeInsets.all(8.0),
                                       child: new GestureDetector(
-                                        child: new Icon(Icons.bookmark_border,
-                                            color: Colors.blue),
-                                        onTap: _fetchData,
+                                        child: connectivity
+                                            ? new Icon(Icons.save,
+                                                color: Colors.blue)
+                                            : new Icon(Icons.bookmark_border,
+                                                color: Colors.blue),
+                                        onTap: () {},
                                       ),
                                     ),
                                     new Flexible(
@@ -181,7 +185,7 @@ class _MainFetchDataState extends State<MainFetchData> {
                       ),
                     );
                   }),
-          onRefresh:  _fetchData,
+          onRefresh: _fetchData,
           color: Colors.white,
           backgroundColor: Colors.lightBlue),
     );
@@ -192,15 +196,19 @@ class MainCollapsingToolbar extends StatelessWidget {
   var item;
   var result;
   bool connectivity;
+  String tableName;
 
   MainCollapsingToolbar(
-      {Key key, @required this.item, @required this.connectivity})
+      {Key key,
+      @required this.item,
+      @required this.connectivity,
+      this.tableName})
       : super(key: key);
 
   Image _setImage(var image) {
     Image dbImage;
 
-    if (connectivity) {
+    if (connectivity && tableName == "news") {
       Uint8List bytes = base64.decode(image);
       dbImage = Image.memory(bytes, fit: BoxFit.cover);
     } else {
