@@ -4,7 +4,6 @@ import 'package:news_app_flutter/fragments/settings_fragment.dart';
 import 'package:news_app_flutter/fragments/profile_fragment.dart';
 import 'package:news_app_flutter/fetch_data/main_fetch_data.dart';
 import 'package:news_app_flutter/services/authentication.dart';
-import 'package:news_app_flutter/fragments/info_fragment.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
@@ -27,10 +26,9 @@ class HomePage extends StatefulWidget {
   var drawerItems = [
     new DrawerItem("Home", Icons.home),
     new DrawerItem("Categories", Icons.category),
-    new DrawerItem("Favorite", Icons.bookmark_border),
+    new DrawerItem("Favorite", Icons.favorite_border),
     new DrawerItem("Profile", Icons.face),
     new DrawerItem("Settings", Icons.settings),
-    new DrawerItem("Info", Icons.info),
     new DrawerItem("Logout", Icons.arrow_back)
   ];
 
@@ -78,8 +76,6 @@ class HomePageState extends State<HomePage> {
       case 4:
         return new SettingsFragment();
       case 5:
-        return new InfoFragment();
-      case 6:
         _signOut();
         break;
       default:

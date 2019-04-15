@@ -117,6 +117,17 @@ class _MainFetchDataState extends State<MainFetchData> {
     return imageProvider;
   }
 
+  Future<void> _refresh() async {
+    setState(() {
+      isLoading = true;
+    });
+    return new Future.delayed(const Duration(seconds: 1), () {
+      setState(() {
+        isLoading = false;
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -185,7 +196,7 @@ class _MainFetchDataState extends State<MainFetchData> {
                       ),
                     );
                   }),
-          onRefresh: _fetchData,
+          onRefresh: _refresh,
           color: Colors.white,
           backgroundColor: Colors.lightBlue),
     );
