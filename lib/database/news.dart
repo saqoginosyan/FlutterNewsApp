@@ -1,5 +1,4 @@
 class News {
-
   int id;
   String _title;
   String _image;
@@ -36,6 +35,7 @@ class News {
     map["url"] = _url;
     return map;
   }
+
   void setNewsId(int id) {
     this.id = id;
   }

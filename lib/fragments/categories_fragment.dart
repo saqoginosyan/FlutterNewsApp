@@ -36,13 +36,13 @@ class CategoriesState extends State<Categories> {
           body: new TabBarView(
             children: [
               MainFetchData(
-                  "https://newsapi.org/v2/everything?q=sport&apiKey=d9df3e32fcfb4dc880ec8cc179b924cf"),
+                  "https://newsapi.org/v2/everything?q=sport&apiKey=364601550a0348a5818d66050fecdead"),
               MainFetchData(
-                  "https://newsapi.org/v2/everything?q=Food&apiKey=d9df3e32fcfb4dc880ec8cc179b924cf"),
+                  "https://newsapi.org/v2/everything?q=Food&apiKey=364601550a0348a5818d66050fecdead"),
               MainFetchData(
-                  "https://newsapi.org/v2/everything?q=Politics&apiKey=d9df3e32fcfb4dc880ec8cc179b924cf"),
+                  "https://newsapi.org/v2/everything?q=Politics&apiKey=364601550a0348a5818d66050fecdead"),
               MainFetchData(
-                  "https://newsapi.org/v2/everything?q=Tech&apiKey=d9df3e32fcfb4dc880ec8cc179b924cf"),
+                  "https://newsapi.org/v2/everything?q=Tech&apiKey=364601550a0348a5818d66050fecdead"),
             ],
           ),
         ),

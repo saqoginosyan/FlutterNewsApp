@@ -20,6 +20,7 @@ dependencies:
   sqflite: ^1.0.0
   path_provider: ^0.4.1
   fluttertoast: ^3.0.3
+  firebase_messaging: ^2.0.0
 
 dev_dependencies:
   flutter_test:
@@ -31,5 +32,4 @@ flutter:
   - assets/newspaper.png
   - assets/login.png
   - assets/add.ico
-  - assets/breaking_news.jpg
   - assets/news_placeholder.jpg

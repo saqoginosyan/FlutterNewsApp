@@ -1,5 +1,6 @@
 import 'package:news_app_flutter/custom_floating_button/menu_floating_button.dart';
 import 'package:news_app_flutter/database/database_helper.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:news_app_flutter/fetch_data/item.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -7,6 +8,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'dart:typed_data';
 import 'dart:convert';
+
 import 'dart:async';
 
 class MainFetchData extends StatefulWidget {
@@ -34,6 +36,7 @@ class _MainFetchDataState extends State<MainFetchData> {
   int page = 1;
   bool connectivity = false;
   final maxPageSize = 50;
+  FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
 
   _MainFetchDataState(String url) {
     this.url = url;
@@ -65,7 +68,26 @@ class _MainFetchDataState extends State<MainFetchData> {
     _controller = ScrollController();
     _controller.addListener(_scrollListener);
     _fetchData();
+    firebaseCloudMessaging_Listeners();
     super.initState();
+  }
+
+  void firebaseCloudMessaging_Listeners() {
+    _firebaseMessaging.getToken().then((token) {
+      print("token >>> " + token);
+    });
+
+    _firebaseMessaging.configure(
+      onMessage: (Map<String, dynamic> message) async {
+        print('on message $message');
+      },
+      onResume: (Map<String, dynamic> message) async {
+        print('on resume $message');
+      },
+      onLaunch: (Map<String, dynamic> message) async {
+        print('on launch $message');
+      },
+    );
   }
 
   @override

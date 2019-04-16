@@ -66,7 +66,7 @@ class HomePageState extends State<HomePage> {
     switch (pos) {
       case 0:
         return new MainFetchData(
-            "https://newsapi.org/v2/everything?q=daily&apiKey=d9df3e32fcfb4dc880ec8cc179b924cf");
+            "https://newsapi.org/v2/everything?q=daily&apiKey=364601550a0348a5818d66050fecdead");
       case 1:
         return new Categories();
       case 2:
