@@ -8,8 +8,8 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'dart:typed_data';
 import 'dart:convert';
-
 import 'dart:async';
+import 'dart:io';
 
 class MainFetchData extends StatefulWidget {
   String url;
@@ -73,6 +73,8 @@ class _MainFetchDataState extends State<MainFetchData> {
   }
 
   void firebaseCloudMessaging_Listeners() {
+    if (Platform.isIOS) iOS_Permission();
+
     _firebaseMessaging.getToken().then((token) {
       print("token >>> " + token);
     });
@@ -88,6 +90,15 @@ class _MainFetchDataState extends State<MainFetchData> {
         print('on launch $message');
       },
     );
+  }
+
+  void iOS_Permission() {
+    _firebaseMessaging.requestNotificationPermissions(
+        IosNotificationSettings(sound: true, badge: true, alert: true));
+    _firebaseMessaging.onIosSettingsRegistered
+        .listen((IosNotificationSettings settings) {
+      print("Settings registered: $settings");
+    });
   }
 
   @override
@@ -196,7 +207,11 @@ class _MainFetchDataState extends State<MainFetchData> {
                                                 color: Colors.blue)
                                             : new Icon(Icons.bookmark_border,
                                                 color: Colors.blue),
-                                        onTap: () {},
+                                        onTap: () => {
+                                              db.deleteNews(
+                                                  list[index], "news"),
+                                              initState()
+                                            },
                                       ),
                                     ),
                                     new Flexible(

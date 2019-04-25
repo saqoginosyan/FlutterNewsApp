@@ -80,7 +80,10 @@ class FavoriteFragmentState extends State<FavoriteFragment> {
                                   child: new GestureDetector(
                                     child: new Icon(Icons.favorite,
                                         color: Colors.blue),
-                                    onTap: () {},
+                                    onTap: () => {
+                                          db.deleteNews(list[index], "fav"),
+                                          initState()
+                                        },
                                   ),
                                 ),
                                 new Flexible(
