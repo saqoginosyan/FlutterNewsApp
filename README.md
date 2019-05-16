@@ -1,6 +1,6 @@
 # news_app_flutter
 
-test..1..2..3..4..5..6
+test..1..2..3..4..5..6..7
 
 A new Flutter application.
 
